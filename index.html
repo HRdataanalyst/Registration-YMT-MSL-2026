@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registration Lead Lab 2025</title>
+
+  <!-- Font & Tailwind -->
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { prompt: ['Prompt','system-ui','sans-serif'] },
+          colors: { surface: { card: '#ffffff' } },
+          boxShadow: { soft: '0 12px 40px rgba(15, 23, 42, 0.10)' },
+          borderRadius: { '2xl': '1rem' }
+        }
+      }
+    }
+  </script>
+  
+  <style> 
+    body{ font-family:'Prompt',system-ui,sans-serif; } 
+    .clamp-2{
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  /* ===== Animated dots ===== */
+@keyframes dotWave {
+  0% { opacity: .2; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-2px); }
+  100% { opacity: .2; transform: translateY(0); }
+}
+.loading-dots span{
+  display:inline-block; width:.5em;
+  animation: dotWave 1s infinite;
+}
+.loading-dots span:nth-child(2){ animation-delay: .2s; }
+.loading-dots span:nth-child(3){ animation-delay: .4s; }
+
+/* ===== Small blinking light ===== */
+@keyframes pingDot {
+  0% { box-shadow: 0 0 0 0 rgba(16,185,129,.6); }
+  70% { box-shadow: 0 0 0 6px rgba(16,185,129,0); }
+  100%{ box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+}
+.loading-light{
+  width:10px; height:10px; border-radius:9999px;
+  background:#10b981; /* emerald-500 */
+  animation: pingDot 1s infinite;
+}
+    /* ==== เอฟเฟกต์ชีพจรกระพริบ (Pulse Animation) ==== */
+@keyframes pulseRing {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(16,185,129, 0.5);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 12px rgba(16,185,129, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(16,185,129, 0);
+  }
+}
+
+/* ใช้กับวงกลมพื้นหลังไอคอนติ๊ก */
+.pulse-circle {
+  animation: pulseRing 2s infinite;
+  transition: transform 0.3s ease;
+}
+/* ==== เอฟเฟกต์ชีพจรกระพริบ (Pulse Animation) ==== */
+@keyframes pulseRing {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(16,185,129, 0.5);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 12px rgba(16,185,129, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(16,185,129, 0);
+  }
+}
+
+/* เวอร์ชันสีแดงสำหรับ "ไม่ผ่าน" */
+@keyframes pulseRed {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239,68,68, 0.5);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 12px rgba(239,68,68, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239,68,68, 0);
+  }
+}
+
+.pulse-circle {
+  animation: pulseRing 2s infinite;
+}
+
+.pulse-circle-red {
+  animation: pulseRed 2s infinite;
+}
+
+
+  </style>
+  
+</head>
+<body class="min-h-screen bg-slate-100">
+  <main class="min-h-screen grid place-items-center p-4">
+    <section id="mainCardSection" class="w-full max-w-md bg-surface-card rounded-2xl shadow-soft px-7 py-8 md:px-10 md:py-10">
+
+      <!-- โลโก้ -->
+      <div class="flex justify-center mb-5">
+        <img src="https://i.postimg.cc/B6wpk3yh/cropped-Logo-BJC-Big-C-2021-2048x606.png"
+             alt="BJC Big C Logo" class="h-10 md:h-12 object-contain select-none" draggable="false">
+      </div>
+
+      <!-- หัวเรื่อง -->
+      <h1 id="mainTitle" class="text-center text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">
+        Registration Lead Lab 2025
+      </h1>
+      <p id="subTitle" class="mt-2 text-center text-slate-500">ยินดีต้อนรับสู่ระบบลงทะเบียน</p>
+
+      <!-- แถบแจ้งเตือน -->
+      <div id="banner" class="hidden mt-4 rounded-lg px-4 py-3 text-sm"></div>
+
+      <!-- =============== Login =============== -->
+      <div id="loginSection" class="mt-7">
+        <form id="loginForm">
+          <label for="phone" class="block text-sm font-medium text-slate-700 mb-2">กรุณากรอกเบอร์โทรศัพท์</label>
+          <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel"
+            placeholder="เบอร์โทรศัพท์ที่ใช้ในการลงทะเบียน" required
+            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-800 placeholder-slate-400
+                   focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+            >
+          <button id="btnLogin" type="submit"
+            class="mt-5 w-full rounded-xl bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900
+                   text-white font-semibold py-3 transition">
+            เข้าสู่ระบบ
+          </button>
+        </form>
+      </div>
+
+      <!-- ============= Confirm ============= -->
+      <div id="confirmSection" class="hidden">
+        <p class="text-center text-slate-500 mt-2">ยืนยันการลงทะเบียน</p>
+        <div class="mt-6 space-y-3">
+          <div class="bg-slate-100 border border-slate-200 rounded-xl p-3">
+            <p class="text-xs text-slate-500">Full name</p>
+            <p class="text-slate-800 font-semibold" id="cf_fullname">—</p>
+          </div>
+          <div class="bg-slate-100 border border-slate-200 rounded-xl p-3">
+            <p class="text-xs text-slate-500">Nickname</p>
+            <p class="text-slate-800 font-semibold" id="cf_nickname">—</p>
+          </div>
+          <div class="bg-slate-100 border border-slate-200 rounded-xl p-3">
+            <p class="text-xs text-slate-500">Phone Number</p>
+            <p class="text-slate-800 font-semibold" id="cf_phone">—</p>
+          </div>
+          <div class="bg-slate-100 border border-slate-200 rounded-xl p-3">
+            <p class="text-xs text-slate-500">Email</p>
+            <p class="text-slate-800 font-semibold" id="cf_email">—</p>
+          </div>
+          <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+            <p class="text-xs text-slate-500">Group</p>
+            <p class="text-slate-800 font-semibold" id="cf_group">—</p>
+          </div>
+          <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+            <p class="text-xs text-slate-500">Team</p>
+            <p class="text-slate-800 font-semibold" id="cf_team">—</p>
+          </div>
+        </div>
+
+        <div class="mt-8 flex gap-3">
+          <button id="btnConfirm"
+            class="flex-1 rounded-xl bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white font-semibold py-3 transition">
+            ยืนยันการลงทะเบียน
+          </button>
+          <button type="button" id="btnBack"
+            class="flex-1 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3 transition">
+            ย้อนกลับ
+          </button>
+
+          <button type="button" id="btnHomeFromConfirm"
+            class="hidden flex-1 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3 transition">
+            กลับหน้าหลัก
+          </button>
+        </div>
+      </div>
+
+      <!-- ============= Success ============= -->
+      <div id="successSection" class="hidden">
+        <h2 class="text-center text-xl font-semibold text-slate-800 mt-1">ลงทะเบียนสำเร็จ</h2>
+        <div class="mt-4 flex justify-center">
+  <div class="pulse-circle h-16 w-16 rounded-full bg-emerald-200 grid place-items-center shadow">
+    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" stroke="currentColor" class="text-emerald-600" stroke-width="2" opacity="0.15"></circle>
+      <path d="M7 12.5l3 3 7-7" stroke="currentColor" class="text-emerald-700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</div>
+        <p class="mt-4 text-center text-slate-500">คุณได้รับการลงทะเบียนเรียบร้อยแล้ว</p>
+        <div class="mt-6 space-y-3">
+          <button id="btnViewRegistration"
+            class="w-full rounded-xl bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white font-semibold py-3 transition">
+            ข้อมูลการลงทะเบียน
+          </button>
+          <button id="btnInterview"
+            class="hidden w-full rounded-xl bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white font-semibold py-3 transition">
+            ดูผลการสัมภาษณ์
+          </button>
+          <button id="btnGoHome"
+            class="w-full rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3 transition">
+            กลับหน้าหลัก
+          </button>
+        </div>
+      </div>
+
+      <!-- ============= Interview Result ============= -->
+      <div id="interviewSection" class="hidden py-6">
+        <div class="mt-4 flex justify-center">
+          <div id="iv_icon_wrap" class="h-16 w-16 rounded-full grid place-items-center shadow">
+            <svg id="iv_icon" viewBox="0 0 24 24" width="32" height="32" fill="none" aria-hidden="true"></svg>
+          </div>
+        </div>
+        <p id="iv_message" class="mt-4 text-center text-slate-600"></p>
+      </div>
+      </section>
+      
+      <!-- ============= Monitor ============= -->
+<section id="monitorSection" class="hidden w-full max-w-[70vw] lg:max-w-[1150px] mx-auto">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-4">
+    <div>
+      <h2 class="text-2xl font-extrabold text-slate-800">Admin Monitor</h2>
+      <p class="text-slate-500 text-sm">ระบบจัดการและติดตามการลงทะเบียน</p>
+    </div>
+
+    <!-- ✅ เปลี่ยนเป็น Edit Data -->
+    <a href="https://docs.google.com/spreadsheets/d/1PAuC-sG_ugBis9amyE_dGWCc3Vuqn0aliy6iIkDky_0/edit?usp=sharing"
+       target="_blank"
+       class="inline-flex items-center gap-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-2 shadow">
+      ✎ Edit Data
+    </a>
+  </div>
+
+  <!-- Tabs -->
+  <div class="bg-white rounded-xl shadow-soft px-4 py-4 max-w-full text-[13px] md:text-[14px]">
+    <div class="flex gap-6 border-b">
+  <button id="tabList" class="py-2.5 border-b-2 border-emerald-600 text-emerald-700 font-semibold text-[13px] md:text-[14px]">
+    รายชื่อผู้ลงทะเบียน
+  </button>
+</div>
+
+    <!-- Search -->
+    <div class="mt-4">
+      <div class="relative">
+        <input id="monSearch" type="text" placeholder="ค้นหาชื่อ, เบอร์, หรืออีเมล..."
+  class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 pr-9 text-[13px] md:text-[14px] text-slate-800 placeholder-slate-400
+         focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" />
+<span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
+      </div>
+    </div>
+
+    <!-- Table (fixed layout + wrap email) -->
+<div class="mt-5">
+  <!-- ใช้ table-auto เพื่อปล่อยให้คอลัมน์ขยายตามเนื้อหา -->
+ <table class="table-auto w-full text-xs md:text-[13px] align-top">
+  <thead>
+    <tr class="bg-emerald-700 text-white">
+      <th class="text-left px-3 py-2 rounded-l-lg whitespace-nowrap font-semibold">Full name</th>
+      <th class="text-left px-3 py-2 whitespace-nowrap font-semibold">Nickname</th>
+      <th class="text-left px-3 py-2 whitespace-nowrap font-semibold">Phone Number</th>
+      <!-- Email ให้ตัดบรรทัดได้ -->
+      <th class="text-left px-3 py-2 font-semibold">Email</th>
+      <th class="text-left px-3 py-2 whitespace-nowrap font-semibold">Group</th>
+      <th class="text-left px-3 py-2 whitespace-nowrap font-semibold">Team</th>
+      <th class="text-left px-3 py-2 whitespace-nowrap rounded-r-lg font-semibold">Status</th>
+    </tr>
+  </thead>
+    <tbody id="monTbody" class="bg-white divide-y divide-slate-100"></tbody>
+  </table>
+</div>
+
+    <div class="h-5"></div>
+    
+  </div>
+    </section>
+  </main>
+
+  <script>
+    /* ================== CONFIG ================== */
+    const API_BASE = 'https://script.google.com/macros/s/AKfycbxPlUAvgD6v2ITLaLMiQLxvx-RsUNo1te_S4ZVQcDTWzB1E23Lnk8AzgtfLjGFWFWGs/exec';
+
+    /* ================== STATE ================== */
+    let INTERVIEW_READY  = false;
+    let INTERVIEW_RESULT = null;  // 'pass' | 'fail' | null
+    let REG_DATA = null;
+    let isBusy = false;
+    let MON_ROWS = [];   // รายการทั้งหมดจาก API
+let MON_FILTERED = []; // หลังกรอง
+const ADMIN_CODE = 'Data1234'; // ใช้ให้ตรงกับ Apps Script
+
+    /* ================== Utils ================== */
+    const BTN_GREEN = 'w-full rounded-xl bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white font-semibold py-3 transition';
+    const BTN_GREY  = 'w-full rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3 transition';
+
+    function setBanner(type, msg){
+      const el = document.getElementById('banner');
+      if (!msg){ el.className='hidden'; el.textContent=''; return; }
+      const base = 'mt-4 rounded-lg px-4 py-3 text-sm';
+      el.className = type==='error' ? base+' bg-rose-50 text-rose-700 border border-rose-200'
+                                    : base+' bg-emerald-50 text-emerald-700 border border-emerald-200';
+      el.textContent = msg;
+    }
+
+    function setLoading(btn, loading, text='กำลังดำเนินการ', keepButtonLabel = true){
+  // จัดการสถานะปุ่ม
+  if (btn){
+    btn.disabled = loading;
+    btn.classList.toggle('opacity-60', loading);
+    btn.classList.toggle('cursor-not-allowed', loading);
+
+    // ถ้าอยากเปลี่ยนข้อความบนปุ่ม ให้ส่ง keepButtonLabel=false
+    if (!keepButtonLabel){
+      if (loading){ btn.dataset.prev = btn.textContent; btn.textContent = text; } 
+      else { btn.textContent = btn.dataset.prev || btn.textContent; delete btn.dataset.prev; }
+    }
+  }
+
+  // จัดการแบนเนอร์กําลังโหลด + ไฟกระพริบ + จุดวิ่ง
+  const banner = document.getElementById('banner');
+  if (!banner) return;
+
+  if (loading){
+    banner.className = 'mt-4 rounded-lg px-4 py-3 text-sm bg-emerald-50 text-emerald-700 border border-emerald-200';
+    banner.innerHTML = `
+      <div class="flex items-center gap-3">
+        <span class="loading-light"></span>
+        <span>${text}
+          <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+        </span>
+      </div>`;
+  } else {
+    banner.className = 'hidden';
+    banner.textContent = '';
+  }
+}
+
+    function formatPhone(el){
+      let val = el.value.replace(/\D/g, '').slice(0, 10);
+      if (val.length > 6){
+        el.value = val.replace(/(\d{3})(\d{3})(\d{0,4})/, '$1-$2-$3');
+      } else if (val.length > 3){
+        el.value = val.replace(/(\d{3})(\d{0,3})/, '$1-$2');
+      } else {
+        el.value = val;
+      }
+    }
+
+    function updateSuccessButtonsStyle(){
+      const btnInterview = document.getElementById('btnInterview');
+      const btnViewReg   = document.getElementById('btnViewRegistration');
+      btnInterview.classList.toggle('hidden', !INTERVIEW_READY);
+      btnViewReg.className = INTERVIEW_READY ? BTN_GREY : BTN_GREEN;
+    }
+
+    function showSection(which, opts = {}){
+  const loginEl     = document.getElementById('loginSection');
+  const confirmEl   = document.getElementById('confirmSection');
+  const successEl   = document.getElementById('successSection');
+  const interviewEl = document.getElementById('interviewSection');
+  const monitorEl   = document.getElementById('monitorSection');
+  const subTitle    = document.getElementById('subTitle');
+  const mainTitle   = document.getElementById('mainTitle');
+  const mainCard   = document.getElementById('mainCardSection');
+
+  const btnConfirm  = document.getElementById('btnConfirm');
+  const btnBack     = document.getElementById('btnBack');
+  const btnHomeCfm  = document.getElementById('btnHomeFromConfirm');
+
+  // ซ่อนทุกหน้าเสมอ (รวม monitor)
+  [loginEl, confirmEl, successEl, interviewEl, monitorEl].forEach(el=> el && el.classList.add('hidden'));
+  setBanner('', '');
+  mainTitle.classList.remove('mt-3','md:mt-4','mt-4','md:mt-5');
+      
+  mainCard?.classList.remove('hidden');
+
+  if (which === 'confirm'){
+    mainTitle.textContent = 'Confirm Registration';
+    subTitle.textContent  = '';
+    const mode = opts.mode || 'normal';
+    btnConfirm.classList.toggle('hidden', mode === 'review');
+    btnBack.classList.toggle('hidden',    mode === 'review');
+    btnHomeCfm.classList.toggle('hidden', mode !== 'review');
+    confirmEl.classList.remove('hidden');
+  }
+  else if (which === 'success'){
+    mainTitle.textContent = 'Registration Lead Lab 2025';
+    subTitle.textContent  = '';
+    successEl.classList.remove('hidden');
+    updateSuccessButtonsStyle();
+  }
+  else if (which === 'interview'){
+    subTitle.textContent = '';
+    renderInterviewResult(INTERVIEW_RESULT);
+    interviewEl.classList.remove('hidden');
+  }
+ else if (which === 'monitor'){
+  // ซ่อนการ์ดบนสุด (ที่มีโลโก้ + หัวข้อใหญ่)
+  mainCard?.classList.add('hidden');
+
+  // ไม่ต้องตั้ง mainTitle/subTitle ใด ๆ เพราะการ์ดถูกซ่อนไปแล้ว
+  monitorEl.classList.remove('hidden');
+}
+      
+  else {
+    mainTitle.textContent = 'Registration Lead Lab 2025';
+    subTitle.textContent  = 'ยินดีต้อนรับสู่ระบบลงทะเบียน';
+    loginEl.classList.remove('hidden');
+  }
+}  
+
+      function fmtPhone10(digits){
+  const v = String(digits||'').replace(/\D/g,'').slice(0,10);
+  if (v.length === 10) return v.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+  return v;
+}
+
+function renderMonTable(rows){
+  const tb = document.getElementById('monTbody');
+  tb.innerHTML = '';
+  const BATCH = 200;
+  let i = 0;
+
+  function chunk(){
+    const frag = document.createDocumentFragment();
+    for (let c = 0; c < BATCH && i < rows.length; c++, i++){
+      const r = rows[i];
+      const tr = document.createElement('tr');
+      tr.className = 'hover:bg-slate-50 leading-[1.8]';
+      const pill = r.registered
+        ? `<span class="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-emerald-100 text-emerald-700 px-2.5 py-1 text-[11px] md:text-[12px]">ลงทะเบียนแล้ว</span>`
+        : `<span class="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-rose-100 text-rose-700 px-2.5 py-1 text-[11px] md:text-[12px]">ยังไม่ลงทะเบียน</span>`;
+
+      tr.innerHTML = `
+        <td class="px-3 py-2 whitespace-nowrap">${r.fullname||''}</td>
+        <td class="px-3 py-2 whitespace-nowrap">${r.nickname||''}</td>
+        <td class="px-3 py-2 whitespace-nowrap min-w-[120px]">${fmtPhone10(r.phone)}</td>
+        <td class="px-3 py-2 whitespace-normal break-words clamp-2">${r.email||''}</td>
+        <td class="px-3 py-2 whitespace-nowrap">${r.room||''}</td>
+        <td class="px-3 py-2 whitespace-nowrap">${r.seat||''}</td>
+        <td class="px-3 py-2 whitespace-nowrap">${pill}</td>`;
+      frag.appendChild(tr);
+    }
+    tb.appendChild(frag);
+    if (i < rows.length) requestAnimationFrame(chunk);
+  }
+  requestAnimationFrame(chunk);
+}
+ 
+function populateConfirm(data){ document.getElementById('cf_fullname').textContent = data.fullname || '—';
+      document.getElementById('cf_nickname').textContent = data.nickname || '—';
+      const phoneFmt = (data.phone || '').replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+      document.getElementById('cf_phone').textContent    = phoneFmt || '—';
+      document.getElementById('cf_email').textContent    = data.email || '—';
+      document.getElementById('cf_group').textContent    = data.group || '—';
+      document.getElementById('cf_team').textContent     = data.team || '—';
+    }
+
+    function renderInterviewResult(result){
+  const iconWrap = document.getElementById('iv_icon_wrap');
+  const icon     = document.getElementById('iv_icon');
+  const msgEl    = document.getElementById('iv_message');
+  const mainTitle= document.getElementById('mainTitle');
+
+  mainTitle.classList.add('mb-2');
+
+  if (result === 'pass'){
+    // ✅ ผ่านการสัมภาษณ์
+    mainTitle.textContent = 'ผ่านการสัมภาษณ์';
+    mainTitle.classList.add('mt-3','md:mt-4');
+
+    // วงกลมพื้นหลัง + ชีพจรสีเขียว
+    iconWrap.className = 'pulse-circle h-16 w-16 rounded-full bg-emerald-200 grid place-items-center shadow';
+    icon.innerHTML     = `<path d="M7 12.5l3 3 7-7" stroke="currentColor" class="text-emerald-700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
+
+    msgEl.className = 'mt-10 text-[15px] md:text-base text-center text-slate-600 whitespace-pre-line leading-relaxed';
+    msgEl.textContent = 'ยินดีด้วย!\nคุณได้รับการคัดเลือกให้ผ่านเข้าสู่รอบถัดไป\nของโครงการ Lead Lab';
+  } else {
+    // ❌ ไม่ผ่านการสัมภาษณ์
+    mainTitle.textContent = 'ไม่ผ่านการสัมภาษณ์';
+    mainTitle.classList.add('mt-3','md:mt-4');
+
+    // วงกลมพื้นหลัง + ชีพจรสีแดง
+    iconWrap.className = 'pulse-circle-red h-16 w-16 rounded-full bg-rose-200 grid place-items-center shadow';
+    icon.innerHTML     = `<path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" class="text-rose-700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
+
+    msgEl.className = 'mt-10 text-[15px] md:text-base text-center text-slate-600 whitespace-pre-line leading-[1.75]';
+    msgEl.textContent = 'ขอบคุณที่เข้าร่วมโครงการ Lead Lab\nคุณยังไม่ผ่านการคัดเลือกในรอบนี้';
+  }
+}
+     
+    async function getJSON(url, { timeoutMs = 10000 } = {}){
+  const u = new URL(url);
+  u.searchParams.set('ts', Date.now().toString());
+
+  const ctl = new AbortController();
+  const t = setTimeout(() => ctl.abort('timeout'), timeoutMs);
+
+  const res = await fetch(u.toString(), { cache: 'no-store', signal: ctl.signal })
+    .catch(err => { clearTimeout(t); throw err; });
+  clearTimeout(t);
+
+  const ct = res?.headers?.get('content-type') || '';
+  if (!res?.ok) throw new Error(`HTTP ${res?.status} ${res?.statusText}`);
+  if (!ct.includes('application/json')) throw new Error('Non-JSON response');
+  return res.json();
+}
+    
+    async function fetchMonitorList(q=''){
+  const CACHE_KEY = 'MON_ROWS_CACHE_V1';
+  const now = Date.now();
+
+  // ใช้แคชเฉพาะตอน q ว่าง (โหลดครั้งแรกทั้งหมด)
+  if (!q) {
+    try {
+      const cached = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null');
+      if (cached && (now - cached.ts) < 5 * 60 * 1000) {
+        return cached.rows || [];
+      }
+    } catch (_) {}
+  }
+
+  const url = new URL(API_BASE);
+  url.searchParams.set('action','list');
+  url.searchParams.set('code', ADMIN_CODE);
+  if (q) url.searchParams.set('q', q);
+
+  const js = await getJSON(url.toString());
+  if (!js.ok) throw new Error(js.error || 'list_failed');
+  const rows = js.rows || [];
+
+  if (!q) {
+    try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: now, rows })); } catch(_) {}
+  }
+  return rows;
+}
+
+
+    /* ================== Events ================== */
+    document.addEventListener('DOMContentLoaded', () => {
+  /* ========= แทนบล็อก submit ทั้งหมด ========= */
+   document.getElementById('loginForm').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    if (isBusy) return;
+
+    const btnLogin = document.getElementById('btnLogin');
+
+    // ใช้ค่าดิบจากช่อง (อย่าแปลงก่อน) เพื่อให้รับ ADMIN_CODE ได้
+    const rawInput = (document.getElementById('phone').value || '').trim();
+
+    // 1) โหมดแอดมิน: เทียบค่าดิบกับ ADMIN_CODE ตรง ๆ
+    if (rawInput === ADMIN_CODE){
+      try{
+        isBusy = true; setLoading(btnLogin, true, 'กำลังโหลด...');
+        MON_ROWS = (await fetchMonitorList(''))
+  .filter(o =>
+    // กำหนด “คีย์อย่างน้อยหนึ่ง” ต้องมีข้อมูลจริง
+    ['fullname','nickname','phone','email','room','seat'].some(k => (o[k]||'').toString().trim() !== '')
+  );
+
+MON_FILTERED = [...MON_ROWS];
+renderMonTable(MON_FILTERED);
+        showSection('monitor');
+
+        // ---------- init ส่วนค้นหา ----------
+        const searchEl = document.getElementById('monSearch');
+searchEl.value = '';
+let qTimer = null;
+searchEl.oninput = (e)=>{
+  clearTimeout(qTimer);
+  qTimer = setTimeout(() => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q){ MON_FILTERED = [...MON_ROWS]; renderMonTable(MON_FILTERED); return; }
+    MON_FILTERED = MON_ROWS.filter(o =>
+      (o.fullname||'').toLowerCase().includes(q) ||
+      (o.nickname||'').toLowerCase().includes(q) ||
+      (o.phone||'').toLowerCase().includes(q)    ||
+      (o.email||'').toLowerCase().includes(q)    ||
+      (o.room||'').toLowerCase().includes(q)     ||
+      (o.seat||'').toLowerCase().includes(q)
+    );
+    renderMonTable(MON_FILTERED);
+  }, 200);
+};
+
+        
+        tabRooms.onclick = ()=>{
+          tabRooms.className= 'py-3 border-b-2 border-emerald-600 text-emerald-700 font-semibold';
+          tabList.className = 'py-3 text-slate-500 hover:text-slate-700';
+          tableWrap.classList.add('hidden');
+          roomsPane.classList.remove('hidden');
+        };
+
+      } finally {
+        isBusy = false; setLoading(btnLogin, false);
+      }
+      return; // ❗ สำคัญ: อย่าให้หลุดไปตรวจเบอร์ต่อ
+    }
+
+    // 2) โหมดผู้ใช้ทั่วไป: แปลงเป็น “ตัวเลข 10 หลัก” แล้วค่อยตรวจ
+    const digits = rawInput.replace(/\D/g,'').slice(0,10);
+    if (!/^0\d{9}$/.test(digits)){
+      setBanner('error','กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก (ขึ้นต้นด้วย 0)');
+      return;
+    }
+
+    // เรียก API lookup ด้วยเลข 10 หลัก
+    try{
+      isBusy = true; setLoading(btnLogin, true);
+      const js = await getJSON(`${API_BASE}?action=lookup&phone=${encodeURIComponent(digits)}`);
+      if (!js.ok){ setBanner('error','เกิดข้อผิดพลาดในการตรวจสอบข้อมูล'); return; }
+      if (!js.found){ setBanner('error','ไม่พบข้อมูลในระบบ'); return; }
+
+      // เก็บ state สำหรับหน้าอื่น ๆ
+      REG_DATA         = js.data || null;
+      INTERVIEW_READY  = !!(js.data && js.data.interviewReady);
+      INTERVIEW_RESULT = js.data ? js.data.interviewResult : null;
+
+      if (js.data && js.data.alreadyRegistered) {
+        // ลงทะเบียนไว้แล้ว → ไปหน้า Success
+        showSection('success');
+      } else {
+        // ยังไม่ลงทะเบียน → ไปหน้า Confirm
+        populateConfirm(REG_DATA);
+        showSection('confirm');
+      }
+    }catch(err){
+      console.error('[LOOKUP ERROR]', err);
+      alert('เชื่อมต่อระบบไม่สำเร็จ\n' + String(err));
+      setBanner('error','ไม่สามารถเชื่อมต่อบริการได้ กรุณาลองใหม่');
+    }finally{
+      isBusy = false; setLoading(btnLogin, false);
+    }
+  });
+
+      // ===== ยืนยันการลงทะเบียน (confirm) =====
+      document.getElementById('btnConfirm')?.addEventListener('click', async ()=>{
+        if (isBusy) return;
+        const btn = document.getElementById('btnConfirm');
+        try{
+          isBusy = true; setLoading(btn, true);
+          const rawPhone = (document.getElementById('cf_phone').textContent || '').replace(/\D/g,'');
+
+          const body = new URLSearchParams({ action:'confirm', phone: rawPhone });
+          const res  = await fetch(API_BASE, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body
+          });
+          const ct = res.headers.get('content-type') || '';
+          if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+          if (!ct.includes('application/json')) throw new Error('Non-JSON response');
+          const js = await res.json();
+
+          if (!js.ok){
+            setBanner('error', js.error==='not_found' ? 'ไม่พบข้อมูลในระบบ' : 'บันทึกสถานะไม่สำเร็จ');
+            return;
+          }
+
+          INTERVIEW_READY  = !!(js.data && js.data.interviewReady);
+          INTERVIEW_RESULT = js.data ? js.data.interviewResult : null;
+
+          showSection('success');
+        }catch(err){
+          console.error('[CONFIRM ERROR]', err);
+          alert('เชื่อมต่อระบบไม่สำเร็จ\n' + String(err));
+          setBanner('error','ไม่สามารถเชื่อมต่อบริการได้ กรุณาลองใหม่');
+        }finally{
+          isBusy = false; setLoading(btn, false);
+        }
+      });
+      // ===== ปุ่มในหน้า Success =====
+document.getElementById('btnViewRegistration')?.addEventListener('click', () => {
+  // เปิดหน้า Confirm แบบอ่านอย่างเดียว (review)
+  if (!REG_DATA) { setBanner('error', 'ไม่พบข้อมูลลงทะเบียน'); return; }
+  populateConfirm(REG_DATA);
+  showSection('confirm', { mode: 'review' }); // ซ่อนปุ่มยืนยัน/ย้อนกลับ และโชว์ปุ่ม "กลับหน้าหลัก"
+});
+
+document.getElementById('btnGoHome')?.addEventListener('click', () => {
+  try { document.getElementById('loginForm')?.reset(); } catch(e){}
+  REG_DATA = null; INTERVIEW_READY = false; INTERVIEW_RESULT = null;
+  showSection('login');
+});
+
+// ===== ปุ่มในหน้า Confirm =====
+document.getElementById('btnBack')?.addEventListener('click', () => {
+  // กรณีมาก่อนยืนยัน ให้ย้อนกลับไปหน้าล็อกอิน
+  showSection('login');
+});
+
+document.getElementById('btnHomeFromConfirm')?.addEventListener('click', () => {
+  // โหมด review กดกลับหน้าหลัก
+  try { document.getElementById('loginForm')?.reset(); } catch(e){}
+  REG_DATA = null; INTERVIEW_READY = false; INTERVIEW_RESULT = null;
+  showSection('login');
+});
+      // ===== ปุ่ม ดูผลการสัมภาษณ์ =====
+document.getElementById('btnInterview')?.addEventListener('click', () => {
+  if (!INTERVIEW_RESULT) {
+    alert('ยังไม่มีข้อมูลผลการสัมภาษณ์');
+    return;
+  }
+  showSection('interview');
+});
+
+
+
+      // เปิดหน้าแรก
+      showSection('login');
+    });
+ 
+
+  </script>
+</body>
+</html>
