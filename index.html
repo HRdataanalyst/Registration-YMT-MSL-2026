@@ -175,8 +175,8 @@
             <p class="text-slate-800 font-semibold" id="cf_email">—</p>
           </div>
           <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
-            <p class="text-xs text-slate-500">Group</p>
-            <p class="text-slate-800 font-semibold" id="cf_group">—</p>
+            <p class="text-xs text-slate-500">Room</p>
+<p class="text-slate-800 font-semibold" id="cf_group">—</p>
           </div>
           <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
             <p class="text-xs text-slate-500">Team</p>
@@ -250,7 +250,7 @@
     </div>
 
     <!-- ✅ เปลี่ยนเป็น Edit Data -->
-    <a href="https://docs.google.com/spreadsheets/d/1PAuC-sG_ugBis9amyE_dGWCc3Vuqn0aliy6iIkDky_0/edit?usp=sharing"
+    <a href="https://docs.google.com/spreadsheets/d/1O2kJ29pj4TPcK6M4ajLUJWMekh0arvmt_jFG7mRqVXc/edit?usp=sharing"
        target="_blank"
        class="inline-flex items-center gap-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-2 shadow">
       ✎ Edit Data
@@ -286,8 +286,8 @@
       <th class="text-left px-3 py-2 whitespace-nowrap font-semibold">Phone Number</th>
       <!-- Email ให้ตัดบรรทัดได้ -->
       <th class="text-left px-3 py-2 font-semibold">Email</th>
-      <th class="text-left px-3 py-2 whitespace-nowrap font-semibold">Group</th>
-      <th class="text-left px-3 py-2 whitespace-nowrap font-semibold">Team</th>
+      <th class="text-left px-3 py-2 whitespace-nowrap font-semibold">Room</th>
+<th class="text-left px-3 py-2 whitespace-nowrap font-semibold">Team</th>
       <th class="text-left px-3 py-2 whitespace-nowrap rounded-r-lg font-semibold">Status</th>
     </tr>
   </thead>
@@ -303,7 +303,7 @@
 
   <script>
     /* ================== CONFIG ================== */
-    const API_BASE = 'https://script.google.com/macros/s/AKfycbxPlUAvgD6v2ITLaLMiQLxvx-RsUNo1te_S4ZVQcDTWzB1E23Lnk8AzgtfLjGFWFWGs/exec';
+    const API_BASE = 'https://script.google.com/macros/s/AKfycbx_j32_Advl7JoJWaLRs9Hpx3lkofuHBQFz-kWHQ39BO76-X2NOkfLrbunld6bhrKJLjA/exec';
 
     /* ================== STATE ================== */
     let INTERVIEW_READY  = false;
@@ -472,14 +472,17 @@ function renderMonTable(rows){
   requestAnimationFrame(chunk);
 }
  
-function populateConfirm(data){ document.getElementById('cf_fullname').textContent = data.fullname || '—';
-      document.getElementById('cf_nickname').textContent = data.nickname || '—';
-      const phoneFmt = (data.phone || '').replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
-      document.getElementById('cf_phone').textContent    = phoneFmt || '—';
-      document.getElementById('cf_email').textContent    = data.email || '—';
-      document.getElementById('cf_group').textContent    = data.group || '—';
-      document.getElementById('cf_team').textContent     = data.team || '—';
-    }
+function populateConfirm(data){
+  document.getElementById('cf_fullname').textContent = data.fullname || '—';
+  document.getElementById('cf_nickname').textContent = data.nickname || '—';
+
+  const phoneFmt = String(data.phone || '').replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+
+  document.getElementById('cf_phone').textContent = phoneFmt || '—';
+  document.getElementById('cf_email').textContent = data.email || '—';
+  document.getElementById('cf_group').textContent = data.room || data.group || '—';
+  document.getElementById('cf_team').textContent = data.team || '—';
+}
 
     function renderInterviewResult(result){
   const iconWrap = document.getElementById('iv_icon_wrap');
@@ -608,13 +611,7 @@ searchEl.oninput = (e)=>{
   }, 200);
 };
 
-        
-        tabRooms.onclick = ()=>{
-          tabRooms.className= 'py-3 border-b-2 border-emerald-600 text-emerald-700 font-semibold';
-          tabList.className = 'py-3 text-slate-500 hover:text-slate-700';
-          tableWrap.classList.add('hidden');
-          roomsPane.classList.remove('hidden');
-        };
+      
 
       } finally {
         isBusy = false; setLoading(btnLogin, false);
@@ -682,10 +679,12 @@ searchEl.oninput = (e)=>{
             return;
           }
 
-          INTERVIEW_READY  = !!(js.data && js.data.interviewReady);
-          INTERVIEW_RESULT = js.data ? js.data.interviewResult : null;
+          REG_DATA = js.data || REG_DATA;
 
-          showSection('success');
+INTERVIEW_READY  = !!(js.data && js.data.interviewReady);
+INTERVIEW_RESULT = js.data ? js.data.interviewResult : null;
+
+showSection('success');
         }catch(err){
           console.error('[CONFIRM ERROR]', err);
           alert('เชื่อมต่อระบบไม่สำเร็จ\n' + String(err));
