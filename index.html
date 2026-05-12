@@ -147,10 +147,10 @@
                    focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
             >
           <button id="btnLogin" type="submit"
-            class="mt-5 w-full rounded-xl bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900
-                   text-white font-semibold py-3 transition">
-            เข้าสู่ระบบ
-          </button>
+  class="mt-5 w-full rounded-xl bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900
+         text-white font-semibold py-3 transition">
+  ยืนยัน
+</button>
         </form>
       </div>
 
@@ -639,13 +639,38 @@ searchEl.oninput = (e)=>{
       INTERVIEW_RESULT = js.data ? js.data.interviewResult : null;
 
       if (js.data && js.data.alreadyRegistered) {
-        // ลงทะเบียนไว้แล้ว → ไปหน้า Success
-        showSection('success');
-      } else {
-        // ยังไม่ลงทะเบียน → ไปหน้า Confirm
-        populateConfirm(REG_DATA);
-        showSection('confirm');
-      }
+  showSection('success');
+  return;
+}
+
+// ยังไม่ลงทะเบียน → กดปุ่มนี้แล้วให้ Registered ทันที
+const body = new URLSearchParams({
+  action: 'confirm',
+  phone: digits
+});
+
+const res = await fetch(API_BASE, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  body
+});
+
+const ct = res.headers.get('content-type') || '';
+if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+if (!ct.includes('application/json')) throw new Error('Non-JSON response');
+
+const confirmJs = await res.json();
+
+if (!confirmJs.ok) {
+  setBanner('error', confirmJs.error === 'not_found' ? 'ไม่พบข้อมูลในระบบ' : 'บันทึกสถานะไม่สำเร็จ');
+  return;
+}
+
+REG_DATA = confirmJs.data || REG_DATA;
+INTERVIEW_READY = !!(REG_DATA && REG_DATA.interviewReady);
+INTERVIEW_RESULT = REG_DATA ? REG_DATA.interviewResult : null;
+
+showSection('success');
     }catch(err){
       console.error('[LOOKUP ERROR]', err);
       alert('เชื่อมต่อระบบไม่สำเร็จ\n' + String(err));
