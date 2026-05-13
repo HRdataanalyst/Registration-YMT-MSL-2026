@@ -630,7 +630,7 @@ searchEl.oninput = (e)=>{
 
     // เรียก API lookup ด้วยเลข 10 หลัก
     try{
-      isBusy = true; setLoading(btnLogin, true);
+      isBusy = true; setLoading(btnLogin, true, 'กำลังจัดกลุ่ม...');
       const js = await getJSON(`${API_BASE}?action=lookup&phone=${encodeURIComponent(digits)}`);
       if (!js.ok){ setBanner('error','เกิดข้อผิดพลาดในการตรวจสอบข้อมูล'); return; }
       if (!js.found){ setBanner('error','ไม่พบข้อมูลในระบบ'); return; }
@@ -687,7 +687,7 @@ showSection('success');
         if (isBusy) return;
         const btn = document.getElementById('btnConfirm');
         try{
-          isBusy = true; setLoading(btn, true);
+          isBusy = true; setLoading(btn, true, 'กำลังจัดกลุ่ม...');
           const rawPhone = (document.getElementById('cf_phone').textContent || '').replace(/\D/g,'');
 
           const body = new URLSearchParams({ action:'confirm', phone: rawPhone });
