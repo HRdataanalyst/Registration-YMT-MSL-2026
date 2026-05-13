@@ -114,13 +114,18 @@
   animation: pulseRed 2s infinite;
 }
 
-    @media (max-width: 480px) {
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+@media (max-width: 480px) {
   #mainCardSection {
     width: 90vw;
     max-width: 90vw;
-    max-height: calc(100dvh - 32px);
+    max-height: 90dvh;
     overflow-y: auto;
-    padding: 28px 24px;
     border-radius: 22px;
   }
 }
@@ -130,9 +135,9 @@
   </style>
   
 </head>
-<body class="min-h-screen bg-slate-100 grid place-items-center px-4 py-5">
-  <section id="mainCardSection"
-         class="w-[90vw] max-w-md min-h-[500px] bg-surface-card rounded-2xl shadow-soft px-6 py-8 md:px-10 md:py-10">
+<body class="h-[100dvh] bg-slate-100 overflow-hidden grid place-items-center px-4">
+ <section id="mainCardSection"
+         class="w-[90vw] max-w-md max-h-[92dvh] overflow-y-auto bg-surface-card rounded-2xl shadow-soft px-6 py-8 md:px-10 md:py-10">
   
 
       <!-- โลโก้ -->
