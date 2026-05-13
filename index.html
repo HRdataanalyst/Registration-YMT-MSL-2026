@@ -628,58 +628,53 @@ searchEl.oninput = (e)=>{
       return;
     }
 
-    // เรียก API lookup ด้วยเลข 10 หลัก
-    try{
-      isBusy = true; setLoading(btnLogin, true, 'กำลังจัดกลุ่ม...');
-      const js = await getJSON(`${API_BASE}?action=lookup&phone=${encodeURIComponent(digits)}`);
-      if (!js.ok){ setBanner('error','เกิดข้อผิดพลาดในการตรวจสอบข้อมูล'); return; }
-      if (!js.found){ setBanner('error','ไม่พบข้อมูลในระบบ'); return; }
+    try {
+  isBusy = true;
+  setLoading(btnLogin, true, 'กำลังจัดกลุ่ม...');
 
-      // เก็บ state สำหรับหน้าอื่น ๆ
-      REG_DATA         = js.data || null;
-      INTERVIEW_READY  = !!(js.data && js.data.interviewReady);
-      INTERVIEW_RESULT = js.data ? js.data.interviewResult : null;
+  const body = new URLSearchParams({
+    action: 'register',
+    phone: digits
+  });
 
-      if (js.data && js.data.alreadyRegistered) {
+  const res = await fetch(API_BASE, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body
+  });
+
+  const ct = res.headers.get('content-type') || '';
+
+  if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+  if (!ct.includes('application/json')) throw new Error('Non-JSON response');
+
+  const js = await res.json();
+
+  if (!js.ok) {
+    setBanner('error', 'เกิดข้อผิดพลาดในการลงทะเบียน');
+    return;
+  }
+
+  if (!js.found) {
+    setBanner('error', 'ไม่พบข้อมูลในระบบ');
+    return;
+  }
+
+  REG_DATA = js.data || null;
+  INTERVIEW_READY = !!(REG_DATA && REG_DATA.interviewReady);
+  INTERVIEW_RESULT = REG_DATA ? REG_DATA.interviewResult : null;
+
   showSection('success');
-  return;
+
+} catch (err) {
+  console.error('[REGISTER ERROR]', err);
+  alert('เชื่อมต่อระบบไม่สำเร็จ\n' + String(err));
+  setBanner('error', 'ไม่สามารถเชื่อมต่อบริการได้ กรุณาลองใหม่');
+
+} finally {
+  isBusy = false;
+  setLoading(btnLogin, false);
 }
-
-// ยังไม่ลงทะเบียน → กดปุ่มนี้แล้วให้ Registered ทันที
-const body = new URLSearchParams({
-  action: 'confirm',
-  phone: digits
-});
-
-const res = await fetch(API_BASE, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-  body
-});
-
-const ct = res.headers.get('content-type') || '';
-if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
-if (!ct.includes('application/json')) throw new Error('Non-JSON response');
-
-const confirmJs = await res.json();
-
-if (!confirmJs.ok) {
-  setBanner('error', confirmJs.error === 'not_found' ? 'ไม่พบข้อมูลในระบบ' : 'บันทึกสถานะไม่สำเร็จ');
-  return;
-}
-
-REG_DATA = confirmJs.data || REG_DATA;
-INTERVIEW_READY = !!(REG_DATA && REG_DATA.interviewReady);
-INTERVIEW_RESULT = REG_DATA ? REG_DATA.interviewResult : null;
-
-showSection('success');
-    }catch(err){
-      console.error('[LOOKUP ERROR]', err);
-      alert('เชื่อมต่อระบบไม่สำเร็จ\n' + String(err));
-      setBanner('error','ไม่สามารถเชื่อมต่อบริการได้ กรุณาลองใหม่');
-    }finally{
-      isBusy = false; setLoading(btnLogin, false);
-    }
   });
 
       // ===== ยืนยันการลงทะเบียน (confirm) =====
