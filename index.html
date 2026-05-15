@@ -455,7 +455,35 @@ const ADMIN_CODE = 'Data1234'; // ใช้ให้ตรงกับ Apps Scri
     banner.textContent = '';
   }
 }
+function getUserCache(phone){
+  try {
+    const key = 'MSL_USER_' + phone;
+    const cached = JSON.parse(localStorage.getItem(key) || 'null');
 
+    if (!cached) return null;
+
+    // ใช้แคชได้ 7 วัน
+    const age = Date.now() - cached.ts;
+    if (age > 7 * 24 * 60 * 60 * 1000) {
+      localStorage.removeItem(key);
+      return null;
+    }
+
+    return cached.data || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function saveUserCache(phone, data){
+  try {
+    const key = 'MSL_USER_' + phone;
+    localStorage.setItem(key, JSON.stringify({
+      ts: Date.now(),
+      data: data
+    }));
+  } catch (e) {}
+}
     function formatPhone(el){
       let val = el.value.replace(/\D/g, '').slice(0, 10);
       if (val.length > 6){
@@ -724,9 +752,20 @@ searchEl.oninput = (e)=>{
       return;
     }
 
-    try {
+    const cachedUser = getUserCache(digits);
+
+if (cachedUser && cachedUser.alreadyRegistered) {
+  REG_DATA = cachedUser;
+  INTERVIEW_READY = !!REG_DATA.interviewReady;
+  INTERVIEW_RESULT = REG_DATA.interviewResult || null;
+
+  showSection('success');
+  return;
+}
+
+try {
   isBusy = true;
-  setLoading(btnLogin, true, 'กำลังจัดกลุ่ม');
+  setLoading(btnLogin, true, 'กำลังโหลดข้อมูล');
 
   const body = new URLSearchParams({
     action: 'register',
@@ -757,10 +796,14 @@ searchEl.oninput = (e)=>{
   }
 
   REG_DATA = js.data || null;
-  INTERVIEW_READY = !!(REG_DATA && REG_DATA.interviewReady);
-  INTERVIEW_RESULT = REG_DATA ? REG_DATA.interviewResult : null;
+INTERVIEW_READY = !!(REG_DATA && REG_DATA.interviewReady);
+INTERVIEW_RESULT = REG_DATA ? REG_DATA.interviewResult : null;
 
-  showSection('success');
+if (REG_DATA) {
+  saveUserCache(digits, REG_DATA);
+}
+
+showSection('success');
 
 } catch (err) {
   console.error('[REGISTER ERROR]', err);
