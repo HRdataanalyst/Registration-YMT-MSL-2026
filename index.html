@@ -128,62 +128,75 @@ body {
   }
 
   /* ===== Mobile: เฉพาะหน้า Confirm Registration ===== */
-  #mainCardSection.confirm-mobile {
-    min-height: auto !important;
-    height: auto !important;
-    max-height: calc(100dvh - 180px) !important;
-    overflow: hidden !important;
+#mainCardSection.confirm-mobile {
+  width: 92vw !important;
+  max-width: 92vw !important;
 
-    padding: 22px 22px 18px !important;
-    justify-content: flex-start !important;
-  }
+  min-height: auto !important;
+  height: auto !important;
+  max-height: calc(100dvh - 24px) !important;
+  overflow: hidden !important;
 
-  #mainCardSection.confirm-mobile .confirm-logo img {
-    height: 54px !important;
-  }
+  padding: 18px 20px 16px !important;
+  justify-content: flex-start !important;
+}
 
-  #mainCardSection.confirm-mobile #mainTitle {
-    font-size: 26px !important;
-    line-height: 1.15 !important;
-    margin-top: 4px !important;
-  }
+#mainCardSection.confirm-mobile .confirm-logo {
+  margin-bottom: 8px !important;
+}
 
-  #mainCardSection.confirm-mobile #confirmSubText {
-    font-size: 18px !important;
-    margin-top: 8px !important;
-  }
+#mainCardSection.confirm-mobile .confirm-logo img {
+  height: 42px !important;
+}
 
-  #mainCardSection.confirm-mobile .confirm-info-list {
-    margin-top: 20px !important;
-    display: grid !important;
-    gap: 10px !important;
-  }
+#mainCardSection.confirm-mobile #mainTitle {
+  font-size: 23px !important;
+  line-height: 1.15 !important;
+  margin-top: 0 !important;
+}
 
-  #mainCardSection.confirm-mobile .confirm-info-box {
-    padding: 10px 14px !important;
-    border-radius: 14px !important;
-  }
+#mainCardSection.confirm-mobile #confirmSubText {
+  font-size: 15px !important;
+  margin-top: 6px !important;
+  line-height: 1.2 !important;
+}
 
-  #mainCardSection.confirm-mobile .confirm-info-box p:first-child {
-    font-size: 13px !important;
-    line-height: 1.2 !important;
-  }
+#mainCardSection.confirm-mobile .confirm-info-list {
+  margin-top: 14px !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 9px !important;
+}
 
-  #mainCardSection.confirm-mobile .confirm-info-box p:last-child {
-    font-size: 17px !important;
-    line-height: 1.25 !important;
-  }
+#mainCardSection.confirm-mobile .confirm-info-box {
+  padding: 9px 12px !important;
+  border-radius: 14px !important;
+}
 
-  #mainCardSection.confirm-mobile .confirm-button-row {
-    margin-top: 18px !important;
-  }
+#mainCardSection.confirm-mobile .confirm-info-box-full {
+  grid-column: 1 / -1 !important;
+}
 
-  #mainCardSection.confirm-mobile .confirm-button-row button {
-    padding-top: 11px !important;
-    padding-bottom: 11px !important;
-    font-size: 18px !important;
-    border-radius: 14px !important;
-  }
+#mainCardSection.confirm-mobile .confirm-info-box p:first-child {
+  font-size: 11px !important;
+  line-height: 1.15 !important;
+}
+
+#mainCardSection.confirm-mobile .confirm-info-box p:last-child {
+  font-size: 14px !important;
+  line-height: 1.2 !important;
+  word-break: break-word !important;
+}
+
+#mainCardSection.confirm-mobile .confirm-button-row {
+  margin-top: 14px !important;
+}
+
+#mainCardSection.confirm-mobile .confirm-button-row button {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+  font-size: 15px !important;
+  border-radius: 14px !important;
 }
 
 
@@ -233,27 +246,32 @@ body {
       <!-- ============= Confirm ============= -->
       <div id="confirmSection" class="hidden">
   <p id="confirmSubText" class="text-center text-slate-500 mt-2">ยืนยันการลงทะเบียน</p>
-  <div class="confirm-info-list mt-8 space-y-4">
-          <div class="confirm-info-box bg-slate-100 border border-slate-200 rounded-xl p-3">
+<div class="confirm-info-list mt-8">
+          <div class="confirm-info-box confirm-info-box-full bg-slate-100 border border-slate-200 rounded-xl p-3">
             <p class="text-xs text-slate-500">Full name</p>
             <p class="text-slate-800 font-semibold" id="cf_fullname">—</p>
           </div>
+
           <div class="confirm-info-box bg-slate-100 border border-slate-200 rounded-xl p-3">
             <p class="text-xs text-slate-500">Nickname</p>
             <p class="text-slate-800 font-semibold" id="cf_nickname">—</p>
           </div>
+
           <div class="confirm-info-box bg-slate-100 border border-slate-200 rounded-xl p-3">
             <p class="text-xs text-slate-500">Phone Number</p>
             <p class="text-slate-800 font-semibold" id="cf_phone">—</p>
           </div>
-          <div class="confirm-info-box bg-slate-100 border border-slate-200 rounded-xl p-3">
+
+          <div class="confirm-info-box confirm-info-box-full bg-slate-100 border border-slate-200 rounded-xl p-3">
             <p class="text-xs text-slate-500">Email</p>
             <p class="text-slate-800 font-semibold" id="cf_email">—</p>
           </div>
+
           <div class="confirm-info-box bg-emerald-50 border border-emerald-200 rounded-xl p-3">
             <p class="text-xs text-slate-500">Room</p>
-<p class="text-slate-800 font-semibold" id="cf_group">—</p>
+            <p class="text-slate-800 font-semibold" id="cf_group">—</p>
           </div>
+
           <div class="confirm-info-box bg-emerald-50 border border-emerald-200 rounded-xl p-3">
             <p class="text-xs text-slate-500">Team</p>
             <p class="text-slate-800 font-semibold" id="cf_team">—</p>
