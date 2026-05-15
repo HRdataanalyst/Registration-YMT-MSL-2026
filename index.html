@@ -455,19 +455,11 @@ const ADMIN_CODE = 'Data1234'; // ใช้ให้ตรงกับ Apps Scri
     banner.textContent = '';
   }
 }
-function getUserCache(phone){
+function getProfileCache(phone){
   try {
-    const key = 'MSL_USER_' + phone;
+    const key = 'MSL_PROFILE_' + phone;
     const cached = JSON.parse(localStorage.getItem(key) || 'null');
-
     if (!cached) return null;
-
-    // ใช้แคชได้ 7 วัน
-    const age = Date.now() - cached.ts;
-    if (age > 1 * 60 * 60 * 1000) {
-      localStorage.removeItem(key);
-      return null;
-    }
 
     return cached.data || null;
   } catch (e) {
@@ -475,12 +467,20 @@ function getUserCache(phone){
   }
 }
 
-function saveUserCache(phone, data){
+function saveProfileCache(phone, data){
   try {
-    const key = 'MSL_USER_' + phone;
+    const key = 'MSL_PROFILE_' + phone;
+
+    const profileOnly = {
+      fullname: data.fullname || '',
+      nickname: data.nickname || '',
+      phone: data.phone || phone,
+      email: data.email || ''
+    };
+
     localStorage.setItem(key, JSON.stringify({
       ts: Date.now(),
-      data: data
+      data: profileOnly
     }));
   } catch (e) {}
 }
@@ -752,16 +752,7 @@ searchEl.oninput = (e)=>{
       return;
     }
 
-    const cachedUser = getUserCache(digits);
-
-if (cachedUser && cachedUser.alreadyRegistered) {
-  REG_DATA = cachedUser;
-  INTERVIEW_READY = !!REG_DATA.interviewReady;
-  INTERVIEW_RESULT = REG_DATA.interviewResult || null;
-
-  showSection('success');
-  return;
-}
+    const cachedProfile = getProfileCache(digits);
 
 try {
   isBusy = true;
@@ -796,11 +787,19 @@ try {
   }
 
   REG_DATA = js.data || null;
+
+if (REG_DATA && cachedProfile) {
+  REG_DATA.fullname = cachedProfile.fullname || REG_DATA.fullname;
+  REG_DATA.nickname = cachedProfile.nickname || REG_DATA.nickname;
+  REG_DATA.phone = cachedProfile.phone || REG_DATA.phone;
+  REG_DATA.email = cachedProfile.email || REG_DATA.email;
+}
+
 INTERVIEW_READY = !!(REG_DATA && REG_DATA.interviewReady);
 INTERVIEW_RESULT = REG_DATA ? REG_DATA.interviewResult : null;
 
 if (REG_DATA) {
-  saveUserCache(digits, REG_DATA);
+  saveProfileCache(digits, REG_DATA);
 }
 
 showSection('success');
