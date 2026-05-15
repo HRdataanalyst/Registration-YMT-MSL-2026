@@ -464,7 +464,7 @@ function getUserCache(phone){
 
     // ใช้แคชได้ 7 วัน
     const age = Date.now() - cached.ts;
-    if (age > 7 * 24 * 60 * 60 * 1000) {
+    if (age > 1 * 60 * 60 * 1000) {
       localStorage.removeItem(key);
       return null;
     }
