@@ -832,10 +832,8 @@ document.getElementById('btnBack')?.addEventListener('click', () => {
 });
 
 document.getElementById('btnHomeFromConfirm')?.addEventListener('click', () => {
-  // โหมด review กดกลับหน้าหลัก
-  try { document.getElementById('loginForm')?.reset(); } catch(e){}
-  REG_DATA = null; INTERVIEW_READY = false; INTERVIEW_RESULT = null;
-  showSection('login');
+  // กลับไปหน้า Success ที่มี 3 ปุ่ม
+  showSection('success');
 });
       // ===== ปุ่ม ดูผลการสัมภาษณ์ =====
 document.getElementById('btnInterview')?.addEventListener('click', () => {
