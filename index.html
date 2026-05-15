@@ -124,9 +124,65 @@ body {
   #mainCardSection {
     width: 90vw;
     max-width: 90vw;
-    max-height: 90dvh;
-    overflow-y: auto;
     border-radius: 22px;
+  }
+
+  /* ===== Mobile: เฉพาะหน้า Confirm Registration ===== */
+  #mainCardSection.confirm-mobile {
+    min-height: auto !important;
+    height: auto !important;
+    max-height: calc(100dvh - 180px) !important;
+    overflow: hidden !important;
+
+    padding: 22px 22px 18px !important;
+    justify-content: flex-start !important;
+  }
+
+  #mainCardSection.confirm-mobile .confirm-logo img {
+    height: 54px !important;
+  }
+
+  #mainCardSection.confirm-mobile #mainTitle {
+    font-size: 26px !important;
+    line-height: 1.15 !important;
+    margin-top: 4px !important;
+  }
+
+  #mainCardSection.confirm-mobile #confirmSubText {
+    font-size: 18px !important;
+    margin-top: 8px !important;
+  }
+
+  #mainCardSection.confirm-mobile .confirm-info-list {
+    margin-top: 20px !important;
+    display: grid !important;
+    gap: 10px !important;
+  }
+
+  #mainCardSection.confirm-mobile .confirm-info-box {
+    padding: 10px 14px !important;
+    border-radius: 14px !important;
+  }
+
+  #mainCardSection.confirm-mobile .confirm-info-box p:first-child {
+    font-size: 13px !important;
+    line-height: 1.2 !important;
+  }
+
+  #mainCardSection.confirm-mobile .confirm-info-box p:last-child {
+    font-size: 17px !important;
+    line-height: 1.25 !important;
+  }
+
+  #mainCardSection.confirm-mobile .confirm-button-row {
+    margin-top: 18px !important;
+  }
+
+  #mainCardSection.confirm-mobile .confirm-button-row button {
+    padding-top: 11px !important;
+    padding-bottom: 11px !important;
+    font-size: 18px !important;
+    border-radius: 14px !important;
   }
 }
 
@@ -141,7 +197,7 @@ body {
   
 
       <!-- โลโก้ -->
-      <div class="flex justify-center mb-5">
+      <div class="confirm-logo flex justify-center mb-5">
        <img src="https://i.postimg.cc/zDk6KH6j/BCM-logo.png"
      alt="BCM Logo"
      class="h-16 md:h-20 object-contain select-none"
@@ -176,35 +232,35 @@ body {
 
       <!-- ============= Confirm ============= -->
       <div id="confirmSection" class="hidden">
-        <p class="text-center text-slate-500 mt-2">ยืนยันการลงทะเบียน</p>
-        <div class="mt-8 space-y-4">
-          <div class="bg-slate-100 border border-slate-200 rounded-xl p-3">
+  <p id="confirmSubText" class="text-center text-slate-500 mt-2">ยืนยันการลงทะเบียน</p>
+  <div class="confirm-info-list mt-8 space-y-4">
+          <div class="confirm-info-box bg-slate-100 border border-slate-200 rounded-xl p-3">
             <p class="text-xs text-slate-500">Full name</p>
             <p class="text-slate-800 font-semibold" id="cf_fullname">—</p>
           </div>
-          <div class="bg-slate-100 border border-slate-200 rounded-xl p-3">
+          <div class="confirm-info-box bg-slate-100 border border-slate-200 rounded-xl p-3">
             <p class="text-xs text-slate-500">Nickname</p>
             <p class="text-slate-800 font-semibold" id="cf_nickname">—</p>
           </div>
-          <div class="bg-slate-100 border border-slate-200 rounded-xl p-3">
+          <div class="confirm-info-box bg-slate-100 border border-slate-200 rounded-xl p-3">
             <p class="text-xs text-slate-500">Phone Number</p>
             <p class="text-slate-800 font-semibold" id="cf_phone">—</p>
           </div>
-          <div class="bg-slate-100 border border-slate-200 rounded-xl p-3">
+          <div class="confirm-info-box bg-slate-100 border border-slate-200 rounded-xl p-3">
             <p class="text-xs text-slate-500">Email</p>
             <p class="text-slate-800 font-semibold" id="cf_email">—</p>
           </div>
-          <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+          <div class="confirm-info-box bg-emerald-50 border border-emerald-200 rounded-xl p-3">
             <p class="text-xs text-slate-500">Room</p>
 <p class="text-slate-800 font-semibold" id="cf_group">—</p>
           </div>
-          <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+          <div class="confirm-info-box bg-emerald-50 border border-emerald-200 rounded-xl p-3">
             <p class="text-xs text-slate-500">Team</p>
             <p class="text-slate-800 font-semibold" id="cf_team">—</p>
           </div>
         </div>
 
-        <div class="mt-8 flex gap-3">
+        <div class="confirm-button-row mt-8 flex gap-3">
           <button id="btnConfirm"
             class="flex-1 rounded-xl bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white font-semibold py-3 transition">
             ยืนยันการลงทะเบียน
@@ -422,10 +478,12 @@ const ADMIN_CODE = 'Data1234'; // ใช้ให้ตรงกับ Apps Scri
   mainTitle.classList.remove('mt-3','md:mt-4','mt-4','md:mt-5');
       
   mainCard?.classList.remove('hidden');
+mainCard?.classList.remove('confirm-mobile');
 
   if (which === 'confirm'){
-    mainTitle.textContent = 'Confirm Registration';
-    subTitle.textContent  = '';
+  mainCard?.classList.add('confirm-mobile');
+  mainTitle.textContent = 'Confirm Registration';
+  subTitle.textContent  = '';
     const mode = opts.mode || 'normal';
     btnConfirm.classList.toggle('hidden', mode === 'review');
     btnBack.classList.toggle('hidden',    mode === 'review');
