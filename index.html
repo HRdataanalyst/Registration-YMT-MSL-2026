@@ -137,14 +137,14 @@ body {
 </head>
 <body class="h-[100dvh] bg-slate-100 overflow-hidden grid place-items-center px-4">
  <section id="mainCardSection"
-         class="w-[90vw] max-w-md max-h-[94dvh] overflow-hidden bg-surface-card rounded-2xl shadow-soft px-6 py-6 md:px-8 md:py-7 flex flex-col justify-start">
+         class="w-[90vw] max-w-md min-h-[560px] max-h-[92dvh] overflow-y-auto bg-surface-card rounded-2xl shadow-soft px-6 py-8 md:px-10 md:py-10 flex flex-col justify-center">
   
 
       <!-- โลโก้ -->
       <div class="flex justify-center mb-5">
        <img src="https://i.postimg.cc/zDk6KH6j/BCM-logo.png"
      alt="BCM Logo"
-     class="h-12 md:h-14 object-contain select-none"
+     class="h-16 md:h-20 object-contain select-none"
      draggable="false">
       </div>
 
@@ -177,34 +177,34 @@ body {
       <!-- ============= Confirm ============= -->
       <div id="confirmSection" class="hidden">
         <p class="text-center text-slate-500 mt-2">ยืนยันการลงทะเบียน</p>
-        <div class="mt-4 space-y-2.5">
-          <div class="bg-slate-100 border border-slate-200 rounded-xl px-3 py-2">
+        <div class="mt-8 space-y-4">
+          <div class="bg-slate-100 border border-slate-200 rounded-xl p-3">
             <p class="text-xs text-slate-500">Full name</p>
             <p class="text-slate-800 font-semibold" id="cf_fullname">—</p>
           </div>
-          <div class="bg-slate-100 border border-slate-200 rounded-xl px-3 py-2">
+          <div class="bg-slate-100 border border-slate-200 rounded-xl p-3">
             <p class="text-xs text-slate-500">Nickname</p>
             <p class="text-slate-800 font-semibold" id="cf_nickname">—</p>
           </div>
-          <div class="bg-slate-100 border border-slate-200 rounded-xl px-3 py-2">
+          <div class="bg-slate-100 border border-slate-200 rounded-xl p-3">
             <p class="text-xs text-slate-500">Phone Number</p>
             <p class="text-slate-800 font-semibold" id="cf_phone">—</p>
           </div>
-          <div class="bg-slate-100 border border-slate-200 rounded-xl px-3 py-2">
+          <div class="bg-slate-100 border border-slate-200 rounded-xl p-3">
             <p class="text-xs text-slate-500">Email</p>
             <p class="text-slate-800 font-semibold" id="cf_email">—</p>
           </div>
-          <div class="bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2">
+          <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
             <p class="text-xs text-slate-500">Room</p>
 <p class="text-slate-800 font-semibold" id="cf_group">—</p>
           </div>
-          <div class="bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2">
+          <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
             <p class="text-xs text-slate-500">Team</p>
             <p class="text-slate-800 font-semibold" id="cf_team">—</p>
           </div>
         </div>
 
-        <div class="mt-4 flex gap-3">
+        <div class="mt-8 flex gap-3">
           <button id="btnConfirm"
             class="flex-1 rounded-xl bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white font-semibold py-3 transition">
             ยืนยันการลงทะเบียน
@@ -425,7 +425,6 @@ const ADMIN_CODE = 'Data1234'; // ใช้ให้ตรงกับ Apps Scri
 
   if (which === 'confirm'){
     mainTitle.textContent = 'Confirm Registration';
-    mainTitle.className = 'text-center text-[24px] md:text-[28px] font-extrabold text-slate-800 tracking-tight';
     subTitle.textContent  = '';
     const mode = opts.mode || 'normal';
     btnConfirm.classList.toggle('hidden', mode === 'review');
@@ -453,11 +452,11 @@ const ADMIN_CODE = 'Data1234'; // ใช้ให้ตรงกับ Apps Scri
 }
       
   else {
-    mainTitle.className = 'text-center text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight';
     mainTitle.textContent = 'Registration MSL+ 2026';
     subTitle.textContent  = 'ยินดีต้อนรับสู่ระบบลงทะเบียน';
     loginEl.classList.remove('hidden');
   }
+}  
 
       function fmtPhone10(digits){
   const v = String(digits||'').replace(/\D/g,'').slice(0,10);
